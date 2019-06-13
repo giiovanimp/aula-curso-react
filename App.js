@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Button, Alert } from "react-native";
+import { View, Text, Alert, TouchableHighlight, TouchableOpacity } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
+import { Button } from "native-base";
 
 class HomeScreen extends React.Component {
 
@@ -20,11 +21,12 @@ class HomeScreen extends React.Component {
   }
 
   componentDidMount = async () => {
-    const urlCursos = 'http://104.248.133.2:7001/cursos'
+    const urlCursos = 'http://104.248.133.2:7001/cursos';
     const response = await fetch(urlCursos);
-    const responseParsed = await response.json();
-    
-    this.setState({ cursos: responseParsed });
+    const responseParsead = await response.json();
+
+    this.setState({ cursos: responseParsead });
+
   }
 
   render() {
@@ -33,18 +35,20 @@ class HomeScreen extends React.Component {
         {this.state.cursos.map(curso => {
           return (
             <TouchableOpacity
-              onPress={() => Alert.alert('Curso ' + curso.id)}
+              onPress={() => Alert.alert(`Clicamos no curso de index ${curso.id} que é o ${curso.nome}`)}
               key={curso.nome}
               style={{
-              flexDirection: 'row',
-              padding: 15,
-              borderBottomColor: '#ccc',
-              borderBottomWidth: 1,
-              alignItems: 'center'
+                flexDirection: 'row',
+                padding: 15,
+                borderBottomColor: '#ccc',
+                borderBottomWidth: 1,
+                // justifyContent: 'center',
+                alignItems: 'center'
               }}>
-              <Text>{curso.id}</Text>
-              <Text style={{ marginLeft: 15}}>{curso.nome}</Text>
-              {/* <Button></Button> */}
+              <Text style={{ marginLeft: 15, fontSize: 22 }}> {curso.id}</Text>
+              <Text style={{ marginLeft: 15, fontSize: 22 }}>{curso.nome}</Text>
+              <Button>
+              </Button>
             </TouchableOpacity>
           )
         })}
