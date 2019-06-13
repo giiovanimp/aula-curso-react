@@ -1,11 +1,11 @@
 import React from "react";
-import { View, Text, Alert, TouchableHighlight } from "react-native";
+import { View, Text, TouchableOpacity, Button, Alert } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
 class HomeScreen extends React.Component {
 
   static navigationOptions = {
-    title: 'Home',
+    title: 'Cursos',
     headerStyle: {
       backgroundColor: '#f4511e',
     },
@@ -16,19 +16,38 @@ class HomeScreen extends React.Component {
   };
 
   state = {
-    value: 1
+    cursos: []
+  }
+
+  componentDidMount = async () => {
+    const urlCursos = 'http://104.248.133.2:7001/cursos'
+    const response = await fetch(urlCursos);
+    const responseParsed = await response.json();
+    
+    this.setState({ cursos: responseParsed });
   }
 
   render() {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <TouchableHighlight
-          style={{ height: 30, width: 30, backgroundColor: 'blue' }}
-          onPress={() => this.props.navigation.navigate('Second', {
-            valorDoState: this.state.value
-          })}>
-          <Text>asuauahsa</Text>
-        </TouchableHighlight>
+      <View style={{ flex: 1 }}>
+        {this.state.cursos.map(curso => {
+          return (
+            <TouchableOpacity
+              onPress={() => Alert.alert('Curso ' + curso.id)}
+              key={curso.nome}
+              style={{
+              flexDirection: 'row',
+              padding: 15,
+              borderBottomColor: '#ccc',
+              borderBottomWidth: 1,
+              alignItems: 'center'
+              }}>
+              <Text>{curso.id}</Text>
+              <Text style={{ marginLeft: 15}}>{curso.nome}</Text>
+              {/* <Button></Button> */}
+            </TouchableOpacity>
+          )
+        })}
       </View>
     );
   }
@@ -49,11 +68,19 @@ class DetailsScreen extends React.Component {
 
   render() {
     return (
-      <View>
-        <Text>Funcionando a navegação</Text>
-        <TouchableHighlight style={{ height: 30, width: 30, backgroundColor: 'blue' }} onPress={() => Alert.alert('aushuash')}>
-          <Text>asuauahsa</Text>
-        </TouchableHighlight>
+      <View style={{ flex: 1 }}>
+        <Text>
+          {this.state.cursos.map(curso => {
+            return (
+              <View key={curso.id}>
+                <Text>{curso.id}</Text>
+                <Text>{curso.nome}</Text>
+              </View>
+            )
+          })}
+        </Text>
+        <Text>{this.state.cursos.length > 0 && this.state.cursos[0].id}</Text>
+        <Text>{this.state.cursos.length > 0 && this.state.cursos[0].nome}</Text>
       </View>
     )
   }
