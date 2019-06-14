@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, Text, ActivityIndicator, Button, ScrollView } from "react-native";
 import styles from './styles/styles';
 
 export default class DetailsScreen extends Component {
@@ -7,12 +7,15 @@ export default class DetailsScreen extends Component {
   state = {
     cursoDetalhado: [],
     alunosCadastrados: [],
-    isLoading: true
+    isLoading: true,
+    idCurso: null
   }
 
   componentDidMount = async () => {
     const { navigation } = this.props;
     const idCurso = navigation.getParam('id');
+
+    this.setState({ idCurso: idCurso });
 
     const urlCursoDetalhado = 'http://104.248.133.2:7001/cursos/' + idCurso;
     const response = await fetch(urlCursoDetalhado);
@@ -57,7 +60,7 @@ export default class DetailsScreen extends Component {
     }
 
     return (
-      <View style={styles.main}>
+      <ScrollView style={styles.main}>
         <View style={styles.infoBox}>
           <View style={styles.titleBox}>
             <Text>Curso</Text>
@@ -75,7 +78,7 @@ export default class DetailsScreen extends Component {
           {this.state.alunosCadastrados.map(aluno => {
             return (
               <View
-                key={aluno.nome}
+                key={aluno.id}
                 style={styles.studentsLine}>
                 <Text style={styles.studentsDesription}>{aluno.id}</Text>
                 <Text style={styles.studentsDesription}>{aluno.nome}</Text>
@@ -83,7 +86,16 @@ export default class DetailsScreen extends Component {
             )
           })}
         </View>
-      </View>
+        <Button 
+          onPress={() => this.props.navigation.navigate('CreateScreen', { id: this.state.idCurso })}
+          title="Cadastrar Aluno"
+          color='#841584'
+        />
+      </ScrollView>
     )
+  }
+
+  onCadastrarAluno() {
+    this.props.navigation.navigate('CreateScreen');
   }
 }
